@@ -1,16 +1,15 @@
-#name = input("Введите ваше имя: ")
-#print("Привет,", name)
+
 
 from ldap3 import Server, Connection, SIMPLE, SYNC, ASYNC, SUBTREE, ALL
 
 # домен - example.com
 # DNS имя сервера Active Directory
-AD_SERVER = 'ITAIN'
+AD_SERVER = 'XXXX'
 # Пользователь (логин) в Active Directory - нужно указать логин в AD
 # в формате 'EXAMPLE\aduser' или 'aduser@example.com'
-AD_USER = "nazarov@itain.ru"
-AD_PASSWORD = 'nAzAr21@@@'
-AD_SEARCH_TREE = 'dc=itain,dc=ru'
+AD_USER = "XXXXXX"
+AD_PASSWORD = 'XXXXXXXXXX'
+AD_SEARCH_TREE = 'dc=xxxx,dc=XXXX'
 
 server = Server(AD_SERVER)
 conn = Connection(server,user=AD_USER,password=AD_PASSWORD)
