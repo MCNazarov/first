@@ -8,7 +8,7 @@ from ldap3 import Server, Connection, SIMPLE, SYNC, ASYNC, SUBTREE, ALL
 AD_SERVER = 'ITAIN'
 # Пользователь (логин) в Active Directory - нужно указать логин в AD
 # в формате 'EXAMPLE\aduser' или 'aduser@example.com'
-AD_USER = 'ITAIN\Nazarov'
+AD_USER = "nazarov@itain.ru"
 AD_PASSWORD = 'nAzAr21@@@'
 AD_SEARCH_TREE = 'dc=itain,dc=ru'
 
