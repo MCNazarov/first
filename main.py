@@ -9,18 +9,20 @@ from ldap3 import Server, Connection, SIMPLE, SYNC, ASYNC, SUBTREE, ALL
 # в формате 'EXAMPLE\aduser' или 'aduser@example.com'
 
 AD_SEARCH_TREE = 'dc=xxxx,dc=XXXX'
-
+# указваем имя домена
 print('Введити имя домена')
 AD_SERVER = input()
+# логин пользователя с правами доступа к домену
 print('Введити логин пользователя')
 AD_USER = input() + '@' + AD_SERVER
+# пароль пользователя домена
 print('Введити пароль пользователя', AD_USER)
 AD_PASSWORD = input()
+# задаем дерево для поиска
 AD_SEARCH_TREE = 'dc=' + AD_SERVER + 'dc=ru'
 AD_SERVER = AD_SERVER + '.ru'
+# проверяем введенные данные
 print(AD_SERVER, AD_USER, AD_PASSWORD)
-
-
 
 
 server = Server(AD_SERVER)
