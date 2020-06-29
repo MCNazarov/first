@@ -7,6 +7,7 @@ from ldap3 import Server, Connection, SIMPLE, SYNC, ASYNC, SUBTREE, ALL
 
 # Пользователь (логин) в Active Directory - нужно указать логин в AD
 # в формате 'EXAMPLE\aduser' или 'aduser@example.com'
+from Work_Exel import open_fail
 
 AD_SEARCH_TREE = 'dc=xxxx,dc=XXXX'
 # указваем имя домена
@@ -21,9 +22,12 @@ AD_PASSWORD = input()
 # задаем дерево для поиска
 AD_SEARCH_TREE = 'dc=' + AD_SERVER + 'dc=ru'
 AD_SERVER = AD_SERVER + '.ru'
+
 # проверяем введенные данные
 print(AD_SERVER, AD_USER, AD_PASSWORD)
 
+# подключаем модуль работы с файлом
+open_fail()
 
 server = Server(AD_SERVER)
 conn = Connection(server,user=AD_USER,password=AD_PASSWORD)
