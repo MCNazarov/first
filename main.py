@@ -1,30 +1,35 @@
 
 
 from ldap3 import Server, Connection, SIMPLE, SYNC, ASYNC, SUBTREE, ALL
-
+import openpyxl
 # домен - example.com
 # DNS имя сервера Active Directory
 
 # Пользователь (логин) в Active Directory - нужно указать логин в AD
 # в формате 'EXAMPLE\aduser' или 'aduser@example.com'
+from openpyxl.worksheet.worksheet import Worksheet
+
 from Work_Exel import open_fail
 
 AD_SEARCH_TREE = 'dc=xxxx,dc=XXXX'
+print(type(AD_SEARCH_TREE))
 # указваем имя домена
 print('Введити имя домена')
 AD_SERVER = input()
+print(type(AD_SERVER))
 # логин пользователя с правами доступа к домену
 print('Введити логин пользователя')
-AD_USER = input() + '@' + AD_SERVER
+AD_USER = input() + '@' + AD_SERVER + '.ru'
 # пароль пользователя домена
 print('Введити пароль пользователя', AD_USER)
 AD_PASSWORD = input()
 # задаем дерево для поиска
-AD_SEARCH_TREE = 'dc=' + AD_SERVER + 'dc=ru'
+AD_SEARCH_TREE = 'dc=' + AD_SERVER + ',dc=ru'
 AD_SERVER = AD_SERVER + '.ru'
 
 # проверяем введенные данные
-print(AD_SERVER, AD_USER, AD_PASSWORD)
+print(AD_SERVER, AD_USER, AD_PASSWORD,AD_SEARCH_TREE)
+#AD_PASSWORD = input()
 
 # подключаем модуль работы с файлом
 open_fail()
@@ -50,16 +55,27 @@ conn.search(AD_SEARCH_TREE,'(&(objectCategory=Person)(!(UserAccountControl:1.2.8
     )
 # после этого запроса в ответ должно быть - True
 
-# можно посмотреть на результат
-print(conn.entries)
 # или вывести только Common-Name - cn
+# функция записи пользователей из АД в вайл xlsx
+def  writeInFile(locentry,user):
+    wb = openpyxl.load_workbook('example.xlsx')
+    sheet: Worksheet = wb.active
+    index = 'A' + str(locentry)
+    sheet[index] = str(user)
+    wb.save('example.xlsx')
+n=0 # счетчик пользователей в АД
 for entry in conn.entries:
-    print(entry.cn)
+    n=n+1
+    print(n,entry.cn)
+   # writeInFile(n, entry.cn)
+    writeInFile(n, entry)
+
+
 
 # Найти пользователя с логином admin (sAMAccountName=admin) и показать информацию по нему
-conn.search(AD_SEARCH_TREE,'(&(objectCategory=Person)(sAMAccountName=nazarov))', SUBTREE,
-    attributes =['cn','proxyAddresses','department','sAMAccountName', 'displayName', 'telephoneNumber', 'ipPhone', 'streetAddress',
-    'title','manager','objectGUID','company','lastLogon']
-    )
+#conn.search(AD_SEARCH_TREE,'(&(objectCategory=Person)(sAMAccountName=nazarov))', SUBTREE,
+#    attributes =['cn','proxyAddresses','department','sAMAccountName', 'displayName', 'telephoneNumber', 'ipPhone', 'streetAddress',
+#    'title','manager','objectGUID','company','lastLogon']
+#    )
 
 conn.entries
