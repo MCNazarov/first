@@ -1,5 +1,3 @@
-
-
 from ldap3 import Server, Connection, SIMPLE, SYNC, ASYNC, SUBTREE, ALL
 import openpyxl
 # домен - example.com
@@ -8,7 +6,6 @@ import openpyxl
 # Пользователь (логин) в Active Directory - нужно указать логин в AD
 # в формате 'EXAMPLE\aduser' или 'aduser@example.com'
 from openpyxl.worksheet.worksheet import Worksheet
-
 from Work_Exel import open_fail
 
 AD_SEARCH_TREE = 'dc=xxxx,dc=XXXX'
@@ -31,8 +28,9 @@ AD_SERVER = AD_SERVER + '.ru'
 print(AD_SERVER, AD_USER, AD_PASSWORD,AD_SEARCH_TREE)
 #AD_PASSWORD = input()
 
-# подключаем модуль работы с файлом
+# создаем файл в который будет записывться результат работы скрипта
 open_fail()
+
 
 server = Server(AD_SERVER)
 conn = Connection(server,user=AD_USER,password=AD_PASSWORD)
@@ -54,21 +52,36 @@ conn.search(AD_SEARCH_TREE,'(&(objectCategory=Person)(!(UserAccountControl:1.2.8
     'title','manager','objectGUID','company','lastLogon']
     )
 # после этого запроса в ответ должно быть - True
-
 # или вывести только Common-Name - cn
 # функция записи пользователей из АД в вайл xlsx
+def NameSheetFile(namelist):
+    wb = openpyxl.load_workbook('example.xlsx')
+    title = str(namelist)
+    wb.create_sheet(title=title, index=0)
+    wb.save('example.xlsx')
+
 def  writeInFile(locentry,user):
     wb = openpyxl.load_workbook('example.xlsx')
-    sheet: Worksheet = wb.active
+    sheet = wb.active
     index = 'A' + str(locentry)
     sheet[index] = str(user)
     wb.save('example.xlsx')
+
 n=0 # счетчик пользователей в АД
+NameSheetFile('Users')
 for entry in conn.entries:
     n=n+1
-    print(n,entry.cn)
-   # writeInFile(n, entry.cn)
-    writeInFile(n, entry)
+    print(n, entry.cn)
+    writeInFile(n, entry.cn)
+
+
+conn.search(AD_SEARCH_TREE,'(objectCategory=group)')
+NameSheetFile('Grupp')
+p=0 # счетчик пользователей в АД
+for entry in conn.entries:
+    p=p+1
+    print(p, entry)
+    writeInFile(p, entry)
 
 
 
